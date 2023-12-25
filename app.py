@@ -72,7 +72,10 @@ def check_email(user_email, db_email):
 
 @app.route("/chat")
 def chat():
-    return render_template("chat.html")
+    if "user" in session:
+        return render_template("chat.html")
+    else:    
+        return redirect(url_for("home_page"))
 
 @app.errorhandler(404)
 def page_not_found(e):
