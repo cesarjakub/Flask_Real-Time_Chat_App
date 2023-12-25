@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous" defer></script>
+    
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %}</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+          <header class="d-flex justify-content-center py-3">
+            <ul class="nav nav-underline">
+              <li class="nav-item">
+                <a
+                  href="/"
+                  class="nav-link text-black {% block Home %}{% endblock %}"
+                  >Home Page</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  href="/login"
+                  class="nav-link text-black {% block Login %}{% endblock %}"
+                  >Login</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  href="/registration"
+                  class="nav-link text-black {% block Register %}{% endblock %}"
+                  >Registration</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  href="/chat"
+                  class="nav-link text-black {% block Chat %}{% endblock %}"
+                  >Chat</a
+                >
+              </li>
+            </ul>
+          </header>
+        </div>
+    </header>
+
+    <main>
+      {% block content %} {% endblock %}
+    </main>
+
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+          <p class="col-md-4 mb-0 text-body-secondary">© 2024 Chat APP, Inc</p>
+      
+          <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a href="/" class="nav-link px-2 text-body-secondary">Home Page</a></li>
+            <li class="nav-item"><a href="/login" class="nav-link px-2 text-body-secondary">Login</a></li>
+            <li class="nav-item"><a href="/registration" class="nav-link px-2 text-body-secondary">Registration</a></li>
+            <li class="nav-item"><a href="/chat" class="nav-link px-2 text-body-secondary">Chat</a></li>
+          </ul>
+        </footer>
+      </div>
+</body>
+</html>
