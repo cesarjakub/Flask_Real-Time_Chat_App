@@ -5,23 +5,34 @@
 {% block content %}
 <div class="container">
     <div class="registration-form">
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <h2 class="mb-4">Registration</h2>
-        <form>
+        <form action="#" method="POST">
             <div class="mb-3">
                 <label for="firstName" class="form-label">Name</label>
-                <input type="text" class="form-control" id="firstName" placeholder="Name" required>
+                <input type="text" class="form-control" id="firstName" placeholder="Name" name="Name" required>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Email" required>
+                <input type="email" class="form-control" id="email" placeholder="Email" name="Email" required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                <input type="password" class="form-control" id="password" placeholder="Password" name="Password" required>
             </div>
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" placeholder="confirm Password" required>
+                <input type="password" class="form-control" id="confirmPassword" placeholder="confirm Password" name="Password_Confirm" required>
             </div>
             <button type="submit" class="btn btn-dark">Register</button>
         </form>
