@@ -20,7 +20,7 @@ load_dotenv()
 def home_page():
     return render_template("homepage.html")
 
-@app.route("/registration",  methods=["POST", "GET"])
+@app.route("/registration", methods=["POST", "GET"])
 def register():
     if request.method == "POST":
         username = request.form["Name"]
@@ -44,9 +44,31 @@ def register():
     else:
         return render_template("registerform.html")
 
-@app.route("/login")
+@app.route("/login", methods=["POST", "GET"])
 def login():
-    return render_template("loginform.html")
+    if request.method == "POST":
+        email = request.form["Email"]
+        password = request.form["Password"]
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+        user = cursor.fetchone()
+        cursor.close()
+
+        if user and check_password(password, user[3]) and check_email(email, user[2]):
+            session["user"] = user
+            return redirect(url_for("chat"))
+        else:
+            flash("Password or email is incorrect", "warning")
+            return render_template("loginform.html")
+    else:
+        return render_template("loginform.html")
+
+def check_password(user_pass, db_pass):
+    hash_user_pass = hash_password(user_pass)
+    return hash_user_pass == db_pass
+def check_email(user_email, db_email):
+    return user_email == db_email
 
 @app.route("/chat")
 def chat():
