@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect, url_for, flash
+from flask import Flask, render_template, session, request, redirect, url_for, flash, jsonify, abort
 from dotenv import load_dotenv
 from flask_mysqldb import MySQL
 import hashlib
@@ -16,6 +16,36 @@ mysql = MySQL(app)
 
 load_dotenv()
 
+#restapi routes
+@app.route('/api/blog/', methods=['GET'])
+def get_all_blog_posts():
+    if "user" not in session:
+        return redirect(url_for("home_page"))
+
+@app.route('/api/blog/<int:id>', methods=['GET'])
+def get_blog_post(id):
+    if "user" not in session:
+        return redirect(url_for("login"))
+    
+@app.route('/api/blog/', methods=['POST'])
+def add_blog_post():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    
+@app.route('/api/blog/<int:id>', methods=['DELETE'])
+def delete_blog_post(id):
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+            
+@app.route('/api/blog/<int:id>', methods=['PATCH'])
+def update_blog_post(id):
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+
+#web routes
 @app.route("/")
 def home_page():
     return render_template("homepage.html")
