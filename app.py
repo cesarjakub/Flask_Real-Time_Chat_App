@@ -30,9 +30,16 @@ def get_all_chat_posts():
     msg_post = cursor.fetchall()
     return jsonify(msg_post)
 
+#vracení všech zpráv vybraného uživatele
+@app.route('/api/chat/', methods=['GET'])
+def get_chat_posts_by_user():
+    if "user" not in session:
+        return redirect(url_for("home_page"))
+
+
 #vracení všech zpráv vybrané chat room
 @app.route('/api/chat/<int:id>', methods=['GET'])
-def get_chat_post(id):
+def get_chat_post_by_chat_room(id):
     if "user" not in session:
         return redirect(url_for("home_page"))
     cursor = mysql.connection.cursor()
@@ -42,6 +49,12 @@ def get_chat_post(id):
         return jsonify(blog_post)
     else:
         return abort(404)
+    
+#vracení všech zpráv obsahujících vybrané slovo (case insensetive)
+@app.route('/api/chat/', methods=['GET'])
+def get_chat_posts_by_word():
+    if "user" not in session:
+        return redirect(url_for("home_page"))
     
     
 
