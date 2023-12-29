@@ -162,6 +162,19 @@ def handle_join(data):
     join_room(room)
     socketio.emit('mm', {'user': 'System','msg': user[1]+' has joined the room'}, room=room)
 
+    messages = get_messages_for_room(room)
+
+    socketio.emit('load_messages', {'messages': messages}, room=room)
+
+def get_messages_for_room(room):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT users.name, message.MessageText from users INNER JOIN message ON users.id = message.SenderID WHERE message.RoomID = %s;", (room,))
+    msg_post = cursor.fetchall()
+    if msg_post:
+        return msg_post
+    else:
+        return abort(404)
+
 @socketio.on('leave')
 def handle_leave(data):
     user = session["user"]

@@ -45,3 +45,20 @@ socket.on('mm', function(data) {
 
     messages.innerHTML += pretty_text(user, user_message);
 });
+
+socket.on('load_messages', function(data) {
+    var messages = data.messages;
+    updateMessages(messages);
+});
+
+function updateMessages(messages) {
+    var messageContainer = document.getElementById('chat-area');
+
+    messageContainer.innerHTML = '';
+
+    for (var i = 0; i < messages.length; i++) {
+        var message = messages[i];
+        var prettyText = pretty_text(message[0], message[1]);
+        messageContainer.innerHTML += prettyText;
+    }
+}
