@@ -20,33 +20,30 @@ socketio = SocketIO(app)
 load_dotenv()
 
 #restapi routes
+#vracení všech zpráv ze všech chat roomů
 @app.route('/api/chat/', methods=['GET'])
 def get_all_chat_posts():
     if "user" not in session:
         return redirect(url_for("home_page"))
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT users.name, users.email, message.MessageText, message.RoomID, message.Timestamp FROM message INNER JOIN users ON message.SenderID = users.id ORDER BY message.RoomID ")
+    msg_post = cursor.fetchall()
+    return jsonify(msg_post)
 
+#vracení všech zpráv vybrané chat room
 @app.route('/api/chat/<int:id>', methods=['GET'])
 def get_chat_post(id):
     if "user" not in session:
         return redirect(url_for("home_page"))
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT users.name, users.email, message.MessageText, message.RoomID, message.Timestamp FROM message INNER JOIN users ON message.SenderID = users.id WHERE message.RoomID = %s", (id,))
+    blog_post = cursor.fetchall()
+    if blog_post:
+        return jsonify(blog_post)
+    else:
+        return abort(404)
     
-@app.route('/api/chat/', methods=['POST'])
-def add_chat_post():
-    if "user" not in session:
-        return redirect(url_for("home_page"))
-
     
-@app.route('/api/chat/<int:id>', methods=['DELETE'])
-def delete_chat_post(id):
-    if "user" not in session:
-        return redirect(url_for("home_page"))
-
-            
-@app.route('/api/chat/<int:id>', methods=['PATCH'])
-def update_chat_post(id):
-    if "user" not in session:
-        return redirect(url_for("home_page"))
-
 
 #web routes
 @app.route("/")
