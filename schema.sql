@@ -8,10 +8,8 @@ password VARCHAR(255) not null
 CREATE TABLE message(
 id int PRIMARY KEY AUTO_INCREMENT,
 SenderID INT not null,
-ReceiverID INT not null,
 MessageText VARCHAR(255) not null,
 RoomID int not null,
 Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 FOREIGN KEY (SenderID) REFERENCES users(id),
-FOREIGN KEY (ReceiverID) REFERENCES users(id)
 );
