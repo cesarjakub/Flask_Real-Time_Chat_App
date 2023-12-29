@@ -28,13 +28,23 @@ def get_all_chat_posts():
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT users.name, users.email, message.MessageText, message.RoomID, message.Timestamp FROM message INNER JOIN users ON message.SenderID = users.id ORDER BY message.RoomID ")
     msg_post = cursor.fetchall()
-    return jsonify(msg_post)
+    if msg_post:
+        return jsonify(msg_post)
+    else:
+        return abort(404)
 
 #vracení všech zpráv vybraného uživatele
-@app.route('/api/chat/', methods=['GET'])
-def get_chat_posts_by_user():
+@app.route('/api/chat/<name>', methods=['GET'])
+def get_chat_posts_by_user(name):
     if "user" not in session:
         return redirect(url_for("home_page"))
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT users.name, users.email, message.MessageText, message.RoomID, message.Timestamp FROM message INNER JOIN users ON message.SenderID = users.id WHERE users.name = %s", (name,))
+    msg_post = cursor.fetchall()
+    if msg_post:
+        return jsonify(msg_post)
+    else:
+        return abort(404)
 
 
 #vracení všech zpráv vybrané chat room
@@ -44,17 +54,24 @@ def get_chat_post_by_chat_room(id):
         return redirect(url_for("home_page"))
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT users.name, users.email, message.MessageText, message.RoomID, message.Timestamp FROM message INNER JOIN users ON message.SenderID = users.id WHERE message.RoomID = %s", (id,))
-    blog_post = cursor.fetchall()
-    if blog_post:
-        return jsonify(blog_post)
+    msg_post = cursor.fetchall()
+    if msg_post:
+        return jsonify(msg_post)
     else:
         return abort(404)
     
 #vracení všech zpráv obsahujících vybrané slovo (case insensetive)
-@app.route('/api/chat/', methods=['GET'])
-def get_chat_posts_by_word():
+@app.route('/api/chat/<word>', methods=['GET'])
+def get_chat_posts_by_word(word):
     if "user" not in session:
         return redirect(url_for("home_page"))
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT message.MessageText FROM message WHERE message.MessageText LIKE %s", ('%' + word + '%',))
+    msg_post = cursor.fetchall()
+    if msg_post:
+        return jsonify(msg_post)
+    else:
+        return abort(404)
     
     
 
