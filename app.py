@@ -147,6 +147,10 @@ def handle_message(data):
     room = data['room']
     message = data['msg']
     socketio.emit('mm', {'msg': user[1]+ ": " +message}, room=room)
+    cursor = mysql.connection.cursor()
+    cursor.execute("INSERT INTO message(SenderID, MessageText, RoomID) VALUES(%s, %s, %s)", (user[0], message, room))
+    mysql.connection.commit()
+    cursor.close()
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
