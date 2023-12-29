@@ -15,6 +15,8 @@ app.config['MYSQL_USER'] = os.getenv('DB_USER')
 
 mysql = MySQL(app)
 
+socketio = SocketIO(app)
+
 load_dotenv()
 
 #restapi routes
@@ -103,14 +105,11 @@ def check_email(user_email, db_email):
 
 @app.route("/chat")
 def chat():
-    """
     if "user" in session:
         return render_template("chat.html")
     else:
       
         return redirect(url_for("home_page"))
-    """  
-    return render_template("chat.html")
 
 @app.route("/logout")
 def logout():
@@ -127,5 +126,27 @@ def hash_password(password):
     hashed_password = hashlib.sha256(password_with_salt.encode()).hexdigest()
     return hashed_password
 
+#socket IO
+@socketio.on('join')
+def handle_join(data):
+    user = session["user"]
+    room = data['room']
+    join_room(room)
+    socketio.emit('mm', {'msg': user[1]+' has joined the room'}, room=room)
+
+@socketio.on('leave')
+def handle_leave(data):
+    user = session["user"]
+    room = data['room']
+    leave_room(room)
+    socketio.emit('mm', {'msg': user[1]+' has left the room'}, room=room)
+
+@socketio.on('message')
+def handle_message(data):
+    user = session["user"]
+    room = data['room']
+    message = data['msg']
+    socketio.emit('mm', {'msg': user[1]+ ": " +message}, room=room)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

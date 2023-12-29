@@ -1,5 +1,6 @@
 {% extends "base.html" %} 
 {% block link %} 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}"> 
 <script src="{{ url_for('static', filename='script/chat.js') }}" defer></script>
 {% endblock %}
@@ -18,8 +19,8 @@
                     <label for="roomID" class="form-label">Enter Room ID</label>
                     <input type="number" class="form-control" id="roomID">
                 </div>
-                <button type="submit" class="btn btn-dark mb-1">Join Room</button>
-                <button type="submit" class="btn btn-dark">Leave Room</button>
+                <button type="button" onclick="joinRoom()" class="btn btn-dark mb-1">Join Room</button>
+                <button type="button" onclick="leaveRoom()" class="btn btn-dark">Leave Room</button>
 
             
                 <div class="d-flex mt-3">
@@ -27,7 +28,7 @@
                 </div>
             </div>
         </aside>
-        <div class="chat m-2">
+        <div class="chat m-2" id="chat-area">
             
         </div>
     </div>
@@ -41,7 +42,7 @@
                 </div>
             </div>
             <div class="col-1">
-                <button type="submit" class="btn btn-dark">Enter</button>
+                <button type="button" onclick="sendMessage()" class="btn btn-dark">Send</button>
             </div>
         </div>
     </div>
