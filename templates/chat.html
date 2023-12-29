@@ -1,7 +1,47 @@
 {% extends "base.html" %} 
+{% block link %} 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}"> 
+<script src="{{ url_for('static', filename='script/chat.js') }}" defer></script>
+{% endblock %}
 {% block title %}Chat{% endblock %} 
 {% block Chat %}active{% endblock %} 
 
 {% block content %}
+<div class="container">
+    <div class="room-id">
+        <h3>room ID: <span>N/A</span></h3>
+    </div>
+    <div class="d-flex">
+        <aside>
+            <div class="aside" style="height: 100%;">
+                <div class="mb-3">
+                    <label for="roomID" class="form-label">Enter Room ID</label>
+                    <input type="number" class="form-control" id="roomID">
+                </div>
+                <button type="submit" class="btn btn-dark">Enter</button>
+            
+                <div class="d-flex mt-3">
+                    <a type="button" class="btn btn-outline-dark" href="/logout">Log Out</a>
+                </div>
+            </div>
+        </aside>
+        <div class="chat m-2">
+            
+        </div>
+    </div>
 
+
+    <div class="message-box mt-2">
+        <div class="row">
+            <div class="col-11">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="text-message" style="width: 100%;">
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="submit" class="btn btn-dark">Enter</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

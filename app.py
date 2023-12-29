@@ -1,4 +1,5 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash, jsonify, abort
+from flask_socketio import SocketIO, join_room, leave_room
 from dotenv import load_dotenv
 from flask_mysqldb import MySQL
 import hashlib
@@ -17,32 +18,32 @@ mysql = MySQL(app)
 load_dotenv()
 
 #restapi routes
-@app.route('/api/blog/', methods=['GET'])
-def get_all_blog_posts():
+@app.route('/api/chat/', methods=['GET'])
+def get_all_chat_posts():
     if "user" not in session:
         return redirect(url_for("home_page"))
 
-@app.route('/api/blog/<int:id>', methods=['GET'])
-def get_blog_post(id):
+@app.route('/api/chat/<int:id>', methods=['GET'])
+def get_chat_post(id):
     if "user" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("home_page"))
     
-@app.route('/api/blog/', methods=['POST'])
-def add_blog_post():
+@app.route('/api/chat/', methods=['POST'])
+def add_chat_post():
     if "user" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("home_page"))
 
     
-@app.route('/api/blog/<int:id>', methods=['DELETE'])
-def delete_blog_post(id):
+@app.route('/api/chat/<int:id>', methods=['DELETE'])
+def delete_chat_post(id):
     if "user" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("home_page"))
 
             
-@app.route('/api/blog/<int:id>', methods=['PATCH'])
-def update_blog_post(id):
+@app.route('/api/chat/<int:id>', methods=['PATCH'])
+def update_chat_post(id):
     if "user" not in session:
-        return redirect(url_for("login"))
+        return redirect(url_for("home_page"))
 
 
 #web routes
@@ -102,15 +103,19 @@ def check_email(user_email, db_email):
 
 @app.route("/chat")
 def chat():
+    """
     if "user" in session:
         return render_template("chat.html")
-    else:    
+    else:
+      
         return redirect(url_for("home_page"))
+    """  
+    return render_template("chat.html")
 
 @app.route("/logout")
 def logout():
     session.pop("user", None)
-    return redirect(url_for("login"))
+    return redirect(url_for("home_page"))
 
 @app.errorhandler(404)
 def page_not_found(e):
