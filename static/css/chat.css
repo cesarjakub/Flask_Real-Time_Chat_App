@@ -8,4 +8,35 @@
     padding: 20px;
     border: solid 2px black;
     border-radius: 15px;
+    overflow-y: auto;
 }
+
+.custom{
+    margin: 5px;
+    border: solid 1px black;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.custom_name{
+    margin: 5px;
+    padding: 0;
+}
+
+.custom_text{
+    margin: 5px;
+    padding: 0;
+}
+
+.chat::-webkit-scrollbar {
+    width: 7px;
+}
+
+.chat::-webkit-scrollbar-track {
+    border-radius: 15px;
+}
+
+.chat::-webkit-scrollbar-thumb {
+    background: black; 
+    border-radius: 15px;
+  }

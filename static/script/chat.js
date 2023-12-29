@@ -1,7 +1,19 @@
 var socket = io.connect()
 
+
+function pretty_text(user, user_message){
+    let text = `<div class="custom">
+        <p class="custom_name">${user}</p> 
+        <p class="custom_text">${user_message}</p>
+    </div>`;
+    return text;
+}
+
 function joinRoom() {
     var room = document.getElementById('roomID').value;
+    var roomnumber = document.getElementById('room-id');
+    roomnumber.innerHTML = room
+    
     socket.emit('join', {'room': room});
 }
 
@@ -28,9 +40,8 @@ function sendMessage() {
 socket.on('mm', function(data) {
     var messages = document.getElementById('chat-area');
 
-    var new_text_div = document.createElement("div");
+    user = data['user'];
+    user_message = data['msg'];
 
-    new_text_div.textContent = data['msg'];
-
-    messages.append(new_text_div)
+    messages.innerHTML += pretty_text(user, user_message);
 });

@@ -160,21 +160,21 @@ def handle_join(data):
     user = session["user"]
     room = data['room']
     join_room(room)
-    socketio.emit('mm', {'msg': user[1]+' has joined the room'}, room=room)
+    socketio.emit('mm', {'user': 'System','msg': user[1]+' has joined the room'}, room=room)
 
 @socketio.on('leave')
 def handle_leave(data):
     user = session["user"]
     room = data['room']
     leave_room(room)
-    socketio.emit('mm', {'msg': user[1]+' has left the room'}, room=room)
+    socketio.emit('mm', {'user': 'System','msg': user[1]+' has left the room'}, room=room)
 
 @socketio.on('message')
 def handle_message(data):
     user = session["user"]
     room = data['room']
     message = data['msg']
-    socketio.emit('mm', {'msg': user[1]+ ": " +message}, room=room)
+    socketio.emit('mm', {'user': user[1], 'msg': message}, room=room)
     cursor = mysql.connection.cursor()
     cursor.execute("INSERT INTO message(SenderID, MessageText, RoomID) VALUES(%s, %s, %s)", (user[0], message, room))
     mysql.connection.commit()
