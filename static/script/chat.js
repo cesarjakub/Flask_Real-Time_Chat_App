@@ -9,12 +9,32 @@ function pretty_text(user, user_message){
     return text;
 }
 
+function alerts(message_alert){
+    let text = `
+    <div class="alert alert-danger" role="alert">
+    ${message_alert}
+    </div>
+    `
+    return text;
+}
+
 function joinRoom() {
     var room = document.getElementById('roomID').value;
+    var joinbtn = document.getElementById('jointbn');
+    if(room <= 0){
+        var alertArea = document.getElementById('alert_area');
+        alertArea.innerHTML += alerts("Room number can't be lower or equal to 0");
+        joinbtn.setAttribute('disabled', '');
+        return
+    }
+
     var roomnumber = document.getElementById('room-id');
-    roomnumber.innerHTML = room
+    roomnumber.innerHTML = room;
     
     socket.emit('join', {'room': room});
+
+    
+    joinbtn.setAttribute('disabled', '');
 }
 
 function leaveRoom() {
