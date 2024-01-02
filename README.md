@@ -1,14 +1,6 @@
 # Real Time Chat Aplikace
 - **Developed by:** Jakub César
 
-
-- Jednoduchá chatovací aplikace postavená pomocí technologie Flask pro backend a Socket.IO pro komunikaci v reálném čase. Umožňuje uživatelům připojit se k roomkam chatu, posílat a sledovat zprávy v reálném čase.
-
-## Funkce
-- Komunikace v reálném čase pomocí Socket.IO
-- Připojování a opouštění skupin chatu
-- Odesílání a přijímání zpráv v rámci skupin chatu
-
 ------------------
 ## File Structure
 
@@ -28,7 +20,7 @@ templates/
   -homepage.html
   -loginform.html
   -registerform.html
-.env (Database config and cookie config)
+.env (Database config and session_secret config)
 .gitignore (Git ignore file)
 app.py (Flask web app with all endpoints)
 README.md (Project documentation)
@@ -37,6 +29,18 @@ schema.sql (Mysql tables schema)
 ------------------
 ## Popis aplikace
 - **URL:** [http://138.68.93.217:5000/](http://138.68.93.217:5000/) 
+
+- Jednoduchá chatovací aplikace postavená pomocí technologie Flask pro backend a Socket.IO pro komunikaci v reálném čase. Umožňuje uživatelům připojit se k roomkam chatu, posílat a sledovat zprávy v reálném čase.
+
+## Funkce
+- Registrace a následné přihlášení do aplikace (sessions)
+- Komunikace v reálném čase pomocí Socket.IO
+- Připojování a opouštění skupin chatu
+- Odesílání a přijímání zpráv v rámci skupin chatu
+- Zobrazení chybných hlášení pokud nastanou
+- Ukládání do databáze (Uživatele i jeho zprávy)
+- Hashovaní hesla
+
 ------------------
 ## REST API endpointy
 
