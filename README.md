@@ -5,20 +5,20 @@
 
 ```
 static/
-  css/
-    chat.css
-    mainpage.css
-  img/
-    icon.svg
-  script/
-    chat.js
+  -css/
+    -chat.css
+    -mainpage.css
+  -img/
+    -icon.svg
+  -script/
+    -chat.js
 templates/
-  404.html
-  base.html
-  chat.html
-  homepage.html
-  loginform.html
-  registerform.html
+  -404.html
+  -base.html
+  -chat.html
+  -homepage.html
+  -loginform.html
+  -registerform.html
 .env (Database config and cookie config)
 .gitignore (Git ignore file)
 app.py (Flask web app with all endpoints)
