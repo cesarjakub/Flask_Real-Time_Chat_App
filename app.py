@@ -2,8 +2,12 @@ from flask import Flask, render_template, session, request, redirect, url_for, f
 from flask_socketio import SocketIO, join_room, leave_room
 from dotenv import load_dotenv
 from flask_mysqldb import MySQL
+import logging
+from logging.handlers import RotatingFileHandler
 import hashlib
 import os
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -17,13 +21,29 @@ mysql = MySQL(app)
 
 socketio = SocketIO(app)
 
-load_dotenv()
+
+app.logger.setLevel(logging.ERROR)
+
+error_handler = RotatingFileHandler('logs/error.log', maxBytes=10240, backupCount=5)
+error_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s'))
+
+app.logger.addHandler(error_handler)
+
+app.logger.setLevel(logging.INFO)
+
+info_handler = RotatingFileHandler('logs/info.log', maxBytes=10240, backupCount=5)
+info_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s'))
+
+app.logger.addHandler(info_handler)
+
+
 
 #restapi routes
 #vracení všech zpráv ze všech chat roomů
 @app.route('/api/chat/', methods=['GET'])
 def get_all_chat_posts():
     if "user" not in session:
+        app.logger.info(f'Error: unauthorized access.')
         return redirect(url_for("home_page"))
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT users.name, users.email, message.MessageText, message.RoomID, message.Timestamp FROM message INNER JOIN users ON message.SenderID = users.id ORDER BY message.RoomID ")
@@ -37,6 +57,7 @@ def get_all_chat_posts():
 @app.route('/api/chat/<name>', methods=['GET'])
 def get_chat_posts_by_user(name):
     if "user" not in session:
+        app.logger.info(f'Error: unauthorized access.')
         return redirect(url_for("home_page"))
 
     cursor = mysql.connection.cursor()
@@ -52,6 +73,7 @@ def get_chat_posts_by_user(name):
 @app.route('/api/chat/<int:id>', methods=['GET'])
 def get_chat_post_by_chat_room(id):
     if "user" not in session:
+        app.logger.info(f'Error: unauthorized access.')
         return redirect(url_for("home_page"))
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT users.name, users.email, message.MessageText, message.RoomID, message.Timestamp FROM message INNER JOIN users ON message.SenderID = users.id WHERE message.RoomID = %s", (id,))
@@ -65,6 +87,7 @@ def get_chat_post_by_chat_room(id):
 @app.route('/api/chat/word/<word>', methods=['GET'])
 def get_chat_posts_by_word(word):
     if "user" not in session:
+        app.logger.info(f'Error: unauthorized access.')
         return redirect(url_for("home_page"))
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT message.MessageText FROM message WHERE message.MessageText LIKE %s", ('%' + word + '%',))
@@ -136,7 +159,7 @@ def chat():
     if "user" in session:
         return render_template("chat.html")
     else:
-      
+        app.logger.info(f'Error: unauthorized access.')
         return redirect(url_for("home_page"))
 
 @app.route("/logout")
@@ -144,15 +167,43 @@ def logout():
     session.pop("user", None)
     return redirect(url_for("home_page"))
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
-
 def hash_password(password):
     salt = "salted by kuba"
     password_with_salt = password + salt
     hashed_password = hashlib.sha256(password_with_salt.encode()).hexdigest()
     return hashed_password
+
+#errors
+@app.errorhandler(400)
+def bad_request(e):
+    app.logger.error(f'Bad Request: {e}')
+    return render_template('400.html'), 400
+
+@app.errorhandler(401)
+def unauthorized(e):
+    app.logger.error(f'Unauthorized: {e}')
+    return render_template('401.html'), 401
+
+@app.errorhandler(403)
+def forbidden(e):
+    app.logger.error(f'Forbidden: {e}')
+    return render_template('403.html'), 403
+
+@app.errorhandler(404)
+def page_not_found(e):
+    app.logger.info(f'Not Found: {e}')
+    return render_template('404.html'), 404
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    app.logger.info(f'Method Not Allowed: {e}')
+    return render_template('405.html'), 405
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    app.logger.info(f'Internal Server Error: {e}')
+    return render_template('500.html'), 500
+
 
 #socket IO
 @socketio.on('join')
