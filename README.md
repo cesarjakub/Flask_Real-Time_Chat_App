@@ -28,8 +28,6 @@ schema.sql (Mysql tables schema)
 ```
 ------------------
 ## Popis aplikace
-- **URL:** [http://138.68.93.217:5000/](http://138.68.93.217:5000/) 
-
 - Jednoduchá chatovací aplikace postavená pomocí technologie Flask pro backend a Socket.IO pro komunikaci v reálném čase. Umožňuje uživatelům připojit se k roomkam chatu, posílat a sledovat zprávy v reálném čase.
 
 ## Funkce
